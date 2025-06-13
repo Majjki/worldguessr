@@ -50,6 +50,13 @@ export default class Game {
     if(allLocations) this.generateLocations(allLocations);
   }
 
+  startNextRound() {
+    if (this.state === 'getready' && this.curRound <= this.rounds) {
+      this.manualNextRound = true;
+      this.sendStateUpdate();
+    }
+  }
+
   toJSON() {
     return {
       id: this.id,

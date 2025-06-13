@@ -91,6 +91,13 @@ function joinGameByCode(code, onFull, onInvalid, onSuccess) {
         return;
       }
 
+      if (json.type === 'startNextRound' && player.gameId && games.has(player.gameId)) {
+        const game = games.get(player.gameId);
+        if (game.players[player.id].host) {
+          game.startNextRound();
+        }
+      }
+
       onSuccess(game);
       return;
     }
@@ -1223,7 +1230,8 @@ try {
       // start games that have at least 2 players
       if (game.state === 'waiting' && playerCnt > 1 && game.public && game.rounds === game.locations.length) {
         game.start();
-      } else if (game.state === 'getready' && Date.now() > game.nextEvtTime) {
+      } else if (game.state === 'getready' && (Date.now() > game.nextEvtTime || game.manualNextRound)) {
+        game.manualNextRound = false; // Reset manual trigger
         if(game.curRound > game.rounds || game.readyToEnd) {
           game.end();
           // game over

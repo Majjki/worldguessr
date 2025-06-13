@@ -2092,6 +2092,11 @@ if(inCrazyGames) {
                 </div>
         </div>
         )}
+        {multiplayerState?.inGame && multiplayerState?.gameData?.state === 'getready' && multiplayerState?.gameData?.host && (
+          <button className="gameBtn" onClick={() => ws.send(JSON.stringify({ type: 'startNextRound' }))}>
+            Start Next Round
+          </button>
+        )}
 
 <div style={{
         top: 0,
