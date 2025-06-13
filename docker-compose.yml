@@ -14,3 +14,6 @@ services:
 
 volumes:
   mongodb_data:
+
+# For å sette opp MONGODB-miljøvariabelen, bruk følgende streng:
+# MONGODB=mongodb://root:hemlig_passord_23@localhost:27017
