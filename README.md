@@ -44,8 +44,12 @@ Before you start, ensure you have the following installed:
    ```bash
    pnpm install
    ```
-
-3. Run the development server:
+3. MongoDB env
+   ```
+   docker compose up for mongodb
+   MONGODB=mongodb://root:hemlig_passord_23@localhost:27017
+   ```
+4. Run the development server:
    ```bash
    pnpm run dev
    ```

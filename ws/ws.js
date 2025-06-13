@@ -91,12 +91,12 @@ function joinGameByCode(code, onFull, onInvalid, onSuccess) {
         return;
       }
 
-      if (json.type === 'startNextRound' && player.gameId && games.has(player.gameId)) {
-        const game = games.get(player.gameId);
-        if (game.players[player.id].host) {
-          game.startNextRound();
-        }
-      }
+      // if (json.type === 'startNextRound' && player.gameId && games.has(player.gameId)) {
+      //   const game = games.get(player.gameId);
+      //   if (game.players[player.id].host) {
+      //     game.startNextRound();
+      //   }
+      // }
 
       onSuccess(game);
       return;

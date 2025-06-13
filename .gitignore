@@ -42,3 +42,6 @@ next-env.d.ts
 .env
 public/wiki
 .aider*
+.idea
+mise.toml
+package-lock.json
