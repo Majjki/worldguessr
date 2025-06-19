@@ -113,7 +113,19 @@ if (!process.env.MONGODB) {
   // Connect to MongoDB
   mongoose.set('bufferTimeoutMS', 30000); // Increase timeout to 30 seconds
 
-  if (mongoose.connection.readyState !== 1) {
+  async function ensureDbConnection() {
+    if (mongoose.connection.readyState !== 1) {
+      try {
+        await mongoose.connect(process.env.MONGODB, { useNewUrlParser: true, useUnifiedTopology: true });
+        console.log('[INFO] Database Connected');
+      } catch (error) {
+        console.error('[ERROR] Database connection failed!'.red, error.message);
+        dbEnabled = false;
+      }
+    }
+  }
+
+  await ensureDbConnection();
     try {
       await mongoose.connect(process.env.MONGODB);
       console.log('[INFO] Database Connected');
@@ -455,7 +467,14 @@ app.ws('/wg', {
         }
 
         try {
-          const existingUser = await User.findOne({ username });
+          let existingUser;
+          try {
+            existingUser = await User.findOne({ username });
+          } catch (error) {
+            console.error('[SIGNUP ERROR] Failed to query existing user:', error);
+            ws.send(JSON.stringify({ type: 'signupError', message: 'Database query failed' }));
+            return;
+          }
           if (existingUser) {
             ws.send(JSON.stringify({ type: 'signupError', message: 'Username already exists' }));
             return;
@@ -471,8 +490,14 @@ app.ws('/wg', {
         }
 
         try {
-          const newUser = new User({ username });
-          await newUser.save();
+          try {
+            const newUser = new User({ username });
+            await newUser.save();
+          } catch (error) {
+            console.error('[SIGNUP ERROR] Failed to save new user:', error);
+            ws.send(JSON.stringify({ type: 'signupError', message: 'Database save failed' }));
+            return;
+          }
         } catch (error) {
           console.error('[SIGNUP ERROR] Failed to save new user:', error);
           ws.send(JSON.stringify({ type: 'signupError', message: 'Database save failed' }));
