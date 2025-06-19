@@ -454,14 +454,30 @@ app.ws('/wg', {
           return;
         }
 
-        const existingUser = await User.findOne({ username });
+        try {
+          const existingUser = await User.findOne({ username });
+          if (existingUser) {
+            ws.send(JSON.stringify({ type: 'signupError', message: 'Username already exists' }));
+            return;
+          }
+        } catch (error) {
+          console.error('[SIGNUP ERROR] Failed to query existing user:', error);
+          ws.send(JSON.stringify({ type: 'signupError', message: 'Database query failed' }));
+          return;
+        }
         if (existingUser) {
           ws.send(JSON.stringify({ type: 'signupError', message: 'Username already exists' }));
           return;
         }
 
-        const newUser = new User({ username });
-        await newUser.save();
+        try {
+          const newUser = new User({ username });
+          await newUser.save();
+        } catch (error) {
+          console.error('[SIGNUP ERROR] Failed to save new user:', error);
+          ws.send(JSON.stringify({ type: 'signupError', message: 'Database save failed' }));
+          return;
+        }
 
         ws.send(JSON.stringify({ type: 'signupSuccess', username }));
         return;
