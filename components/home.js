@@ -39,7 +39,7 @@ import { inIframe, isForbiddenIframe } from "@/components/utils/inIframe";
 import moment from 'moment-timezone';
 import MapsModal from "@/components/maps/mapsModal";
 import { useRouter } from "next/router";
-import styles from "./home.module.css";
+import styles from "../styles/Home.module.css";
 import { fromLonLat } from "ol/proj";
 import { boundingExtent } from "ol/extent";
 
