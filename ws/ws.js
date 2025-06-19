@@ -30,6 +30,7 @@ function pick5RandomArb() {
     } catch (error) {
       console.error('[ERROR] Failed to pick random arbitrary world location:', error.message);
     }
+  }
   return [...rand].map((r) => ({ lat: r.lat, long: r.lng, country: lookup(r.lat, r.lng, true) ? lookup(r.lat, r.lng, true)[0] : 'unknown' }));
 }
 
@@ -104,9 +105,6 @@ function joinGameByCode(code, onFull, onInvalid, onSuccess) {
       onSuccess(game);
       return;
     }
-  } catch (error) {
-    console.error('[ERROR] Database connection failed!'.red, error.message);
-    dbEnabled = false;
   }
   onInvalid();
 }
