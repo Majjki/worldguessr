@@ -2229,7 +2229,15 @@ if(inCrazyGames) {
               />
               <button
                 onClick={() => {
-                  window.ws.send(JSON.stringify({ type: "signup", username }));
+                  if (window.ws && window.ws.readyState === WebSocket.OPEN) {
+                    if (username.trim().length > 0) {
+                      window.ws.send(JSON.stringify({ type: "signup", username }));
+                    } else {
+                      alert("Please enter a valid username.");
+                    }
+                  } else {
+                    alert("WebSocket connection is not established.");
+                  }
                 }}
               >
                 Sign Up
