@@ -39,6 +39,7 @@ import { inIframe, isForbiddenIframe } from "@/components/utils/inIframe";
 import moment from 'moment-timezone';
 import MapsModal from "@/components/maps/mapsModal";
 import { useRouter } from "next/router";
+import styles from "./home.module.css";
 import { fromLonLat } from "ol/proj";
 import { boundingExtent } from "ol/extent";
 
@@ -2220,12 +2221,13 @@ if(inCrazyGames) {
 
             <center>
 
-            <div className="home__btns">
+            <div className={styles.home__authContainer}>
               <input
                 type="text"
                 placeholder="Enter username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                className={styles.home__authInput}
               />
               <button
                 onClick={() => {
@@ -2239,6 +2241,7 @@ if(inCrazyGames) {
                     alert("WebSocket connection is not established.");
                   }
                 }}
+                className={styles.home__authButton}
               >
                 Sign Up
               </button>
@@ -2246,12 +2249,13 @@ if(inCrazyGames) {
                 onClick={() => {
                   window.ws.send(JSON.stringify({ type: "login" }));
                 }}
+                className={styles.home__authButton}
               >
                 Login
               </button>
-              <ul>
+              <ul className={styles.home__authList}>
                 {usernames.map((name) => (
-                  <li key={name}>{name}</li>
+                  <li key={name} className={styles.home__authListItem}>{name}</li>
                 ))}
               </ul>
 
