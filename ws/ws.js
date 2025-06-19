@@ -12,7 +12,6 @@ import findLatLongRandom from '../components/findLatLongServer.js';
 import { Webhook } from "discord-webhook-node";
 
 import cityGen from '../serverUtils/cityGen.js';
-import User from '../models/User.js';
 import lookup from "coordinate_to_country"
 import { players, games, disconnectedPlayers } from '../serverUtils/states.js';
 import Memsave from '../models/Memsave.js';
