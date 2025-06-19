@@ -1,14 +1,21 @@
-import mongoose from 'mongoose';
+export default class User {
+  static async findOne(query) {
+    const db = global.mongoClient.db(process.env.DB_NAME);
+    return await db.collection('users').findOne(query);
+  }
 
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  statistics: {
-    østfold: { type: Number, default: 0 },
-    nordnorge: { type: Number, default: 0 },
-    vestfold: { type: Number, default: 0 },
-  },
-});
+  static async find(query, projection = {}) {
+    const db = global.mongoClient.db(process.env.DB_NAME);
+    return await db.collection('users').find(query).project(projection).toArray();
+  }
 
-const User = mongoose.models.User || mongoose.model('User', userSchema);
+  static async insertOne(data) {
+    const db = global.mongoClient.db(process.env.DB_NAME);
+    return await db.collection('users').insertOne(data);
+  }
 
-export default User;
+  static async updateOne(query, update) {
+    const db = global.mongoClient.db(process.env.DB_NAME);
+    return await db.collection('users').updateOne(query, update);
+  }
+}
