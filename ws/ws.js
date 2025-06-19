@@ -435,7 +435,7 @@ app.ws('/wg', {
     }
 
   },
-  message: (ws, message, isBinary) => {
+  message: async (ws, message, isBinary) => {
     try {
       // convert array buffer to string
       const str = new TextDecoder().decode(message);
