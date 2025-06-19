@@ -4,7 +4,6 @@ import { FaArrowRotateRight, FaGear,FaRankingStar, FaYoutube } from "react-icons
 import { signOut, useSession } from "@/components/auth/auth";
 import 'react-responsive-modal/styles.css';
 import { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/router";
 import Navbar from "@/components/ui/navbar";
 import GameUI from "@/components/gameUI";
 import BannerText from "@/components/bannerText";
