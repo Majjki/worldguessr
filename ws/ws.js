@@ -11,7 +11,7 @@ import setCorsHeaders from '../serverUtils/setCorsHeaders.js';
 import findLatLongRandom from '../components/findLatLongServer.js';
 import { Webhook } from "discord-webhook-node";
 
-import cityGen from '../serverUtils/cityGen.js';
+import cityGen, { usernames } from '../serverUtils/cityGen.js';
 import lookup from "coordinate_to_country"
 import { players, games, disconnectedPlayers } from '../serverUtils/states.js';
 import Memsave from '../models/Memsave.js';
@@ -442,6 +442,22 @@ app.ws('/wg', {
       const json = JSON.parse(str);
 
       if (!json.type) {
+        return;
+      }
+
+      if (json.type === 'signup') {
+        const { username } = json;
+        if (typeof username !== 'string' || username.length < 3 || username.length > 20 || usernames.has(username)) {
+          ws.send(JSON.stringify({ type: 'signupError', message: 'Invalid or duplicate username' }));
+          return;
+        }
+        usernames.add(username);
+        ws.send(JSON.stringify({ type: 'signupSuccess', username }));
+        return;
+      }
+
+      if (json.type === 'login') {
+        ws.send(JSON.stringify({ type: 'loginSuccess', usernames: Array.from(usernames) }));
         return;
       }
 

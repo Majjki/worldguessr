@@ -97,7 +97,10 @@ export default class Game {
   }
 
 
-  addPlayer(player, host=false, tag) {
+  addPlayer(player, host=false, tag, username=null) {
+    if (username) {
+      player.username = username;
+    }
     if(Object.keys(this.players).length >= this.maxPlayers) {
       return;
     }
