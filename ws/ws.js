@@ -3,6 +3,7 @@ import fs from 'fs';
 import { config } from 'dotenv';
 import Player from './classes/Player.js';
 import { v4 as uuidv4 } from 'uuid';
+import mongoose from 'mongoose';
 import User from '../models/User.js';
 import { Filter } from 'bad-words';
 import Game from './classes/Game.js';
@@ -458,14 +459,15 @@ app.ws('/wg', {
           return;
         }
 
-        await User.insertOne({ username, statistics: { østfold: 0, nordnorge: 0, vestfold: 0 } });
+        const newUser = new User({ username });
+        await newUser.save();
 
         ws.send(JSON.stringify({ type: 'signupSuccess', username }));
         return;
       }
 
       if (json.type === 'login') {
-        const users = await User.find({}, { username: 1 });
+        const users = await User.find({}, 'username');
         ws.send(JSON.stringify({ type: 'loginSuccess', usernames: users.map(user => user.username) }));
         return;
       }
