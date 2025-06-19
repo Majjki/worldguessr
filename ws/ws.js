@@ -11,7 +11,8 @@ import setCorsHeaders from '../serverUtils/setCorsHeaders.js';
 import findLatLongRandom from '../components/findLatLongServer.js';
 import { Webhook } from "discord-webhook-node";
 
-import cityGen, { usernames } from '../serverUtils/cityGen.js';
+import cityGen from '../serverUtils/cityGen.js';
+import User from '../models/User.js';
 import lookup from "coordinate_to_country"
 import { players, games, disconnectedPlayers } from '../serverUtils/states.js';
 import Memsave from '../models/Memsave.js';
@@ -447,17 +448,27 @@ app.ws('/wg', {
 
       if (json.type === 'signup') {
         const { username } = json;
-        if (typeof username !== 'string' || username.length < 3 || username.length > 20 || usernames.has(username)) {
-          ws.send(JSON.stringify({ type: 'signupError', message: 'Invalid or duplicate username' }));
+        if (typeof username !== 'string' || username.length < 3 || username.length > 20) {
+          ws.send(JSON.stringify({ type: 'signupError', message: 'Invalid username' }));
           return;
         }
-        usernames.add(username);
+
+        const existingUser = await User.findOne({ username });
+        if (existingUser) {
+          ws.send(JSON.stringify({ type: 'signupError', message: 'Username already exists' }));
+          return;
+        }
+
+        const newUser = new User({ username });
+        await newUser.save();
+
         ws.send(JSON.stringify({ type: 'signupSuccess', username }));
         return;
       }
 
       if (json.type === 'login') {
-        ws.send(JSON.stringify({ type: 'loginSuccess', usernames: Array.from(usernames) }));
+        const users = await User.find({}, 'username');
+        ws.send(JSON.stringify({ type: 'loginSuccess', usernames: users.map(user => user.username) }));
         return;
       }
 

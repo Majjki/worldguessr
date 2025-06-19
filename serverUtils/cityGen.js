@@ -1,6 +1,5 @@
 import cities from '../public/cities.json' with { type: "json" };
 
-export const usernames = new Set();
 
 export default function cityGen(location) {
   let city = null;
