@@ -111,6 +111,8 @@ if (!process.env.MONGODB) {
   dbEnabled = false;
 } else {
   // Connect to MongoDB
+  mongoose.set('bufferTimeoutMS', 30000); // Increase timeout to 30 seconds
+
   if (mongoose.connection.readyState !== 1) {
     try {
       await mongoose.connect(process.env.MONGODB);
