@@ -26,6 +26,9 @@ function pick5RandomArb() {
   const rand = new Set();
   while(rand.size < 5) {
     rand.add(arbitraryWorld[Math.floor(Math.random() * arbitraryWorld.length)]);
+  } catch (error) {
+    console.error('[ERROR] Database connection failed!'.red, error.message);
+    dbEnabled = false;
   }
   return [...rand].map((r) => ({ lat: r.lat, long: r.lng, country: lookup(r.lat, r.lng, true) ? lookup(r.lat, r.lng, true)[0] : 'unknown' }));
 }
