@@ -859,7 +859,11 @@ setShowCountryButtons(false)
   } catch(e) {}
 
   }
-  useEffect(()=>{loadOptions()}, [])
+  useEffect(()=>{loadOptions();
+
+    gameStorage.setItem("lastVersion", "1.0.0");
+
+  }, [])
 
   useEffect(() => {
     if(options && options.units && options.mapType) {
@@ -2370,7 +2374,7 @@ if(inCrazyGames) {
           inCoolMathGames={inCoolMathGames}
           miniMapShown={miniMapShown} setMiniMapShown={setMiniMapShown}
             singlePlayerRound={singlePlayerRound} setSinglePlayerRound={setSinglePlayerRound} showDiscordModal={showDiscordModal}  setShowDiscordModal={setShowDiscordModal} inCrazyGames={inCrazyGames} showPanoOnResult={showPanoOnResult} setShowPanoOnResult={setShowPanoOnResult} options={options} countryStreak={countryStreak} setCountryStreak={setCountryStreak} xpEarned={xpEarned} setXpEarned={setXpEarned} hintShown={hintShown} setHintShown={setHintShown} pinPoint={pinPoint} setPinPoint={setPinPoint} showAnswer={showAnswer} setShowAnswer={setShowAnswer} loading={loading} setLoading={setLoading} session={session} gameOptionsModalShown={gameOptionsModalShown} setGameOptionsModalShown={setGameOptionsModalShown} latLong={latLong} streetViewShown={streetViewShown} setStreetViewShown={setStreetViewShown} loadLocation={loadLocation} gameOptions={gameOptions} setGameOptions={setGameOptions} />
-        </div>} if
+        </div>}
 
         {screen === "onboarding" && onboarding?.round && <div className="home__onboarding">
           <GameUI
