@@ -130,15 +130,6 @@ if (!process.env.MONGODB) {
   }
 
   await ensureDbConnection();
-    try {
-      await mongoose.connect(process.env.MONGODB);
-      console.log('[INFO] Database Connected');
-    } catch (error) {
-      console.error('[ERROR] Database connection failed!'.red, error.message);
-      console.log(error);
-      dbEnabled = false;
-    }
-  }
 }
 function log(...args) {
   console.log(new Date().toLocaleString("en-US", { timeZone: "America/Chicago" }), ...args);
@@ -536,6 +527,11 @@ app.ws('/wg', {
       }
       if (json.type === 'screen' && json.screen && typeof json.screen === 'string') {
         player.setScreen(json.screen);
+      }
+      
+      if (json.type === 'setGuestName' && json.name) {
+        player.setGuestName(json.name, filter);
+        return;
       }
 
       if((json.type === 'unrankedDuel') && !player.gameId) {

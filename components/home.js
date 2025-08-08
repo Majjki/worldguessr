@@ -1264,6 +1264,29 @@ if(inCrazyGames) {
           gameStorage.setItem("rejoinCode", data.rejoinCode)
       }
 
+      } else if (data.type === "nameChangeSuccess") {
+        setMultiplayerState((prev) => ({
+          ...prev,
+          guestName: data.newName
+        }))
+        toast.success(text("nameChanged") || "Name changed successfully!");
+      
+      } else if (data.type === "playerNameChange") {
+        // Update player name in game data if in multiplayer
+        if (multiplayerState?.gameData?.players) {
+          setMultiplayerState((prev) => ({
+            ...prev,
+            gameData: {
+              ...prev.gameData,
+              players: prev.gameData.players.map(player => 
+                player.id === data.playerId 
+                  ? { ...player, username: data.newName }
+                  : player
+              )
+            }
+          }))
+        }
+      
       } else if (data.type === "error") {
         setMultiplayerState((prev) => ({
           ...prev,
@@ -2184,7 +2207,7 @@ if(inCrazyGames) {
         enteringGameCode: true
       }))}}
 
-      inCoolMathGames={inCoolMathGames} maintenance={maintenance} inCrazyGames={inCrazyGames} loading={loading} onFriendsPress={()=>setFriendsModal(true)} loginQueued={loginQueued} setLoginQueued={setLoginQueued} inGame={multiplayerState?.inGame || screen === "singleplayer"} openAccountModal={() => setAccountModalOpen(true)} session={session} reloadBtnPressed={reloadBtnPressed} backBtnPressed={backBtnPressed} setGameOptionsModalShown={setGameOptionsModalShown} onNavbarPress={() => onNavbarLogoPress()} gameOptions={gameOptions} screen={screen} multiplayerState={multiplayerState} shown={!multiplayerState?.gameData?.duel && !leagueModal} />
+      inCoolMathGames={inCoolMathGames} maintenance={maintenance} inCrazyGames={inCrazyGames} loading={loading} onFriendsPress={()=>setFriendsModal(true)} loginQueued={loginQueued} setLoginQueued={setLoginQueued} inGame={multiplayerState?.inGame || screen === "singleplayer"} openAccountModal={() => setAccountModalOpen(true)} session={session} reloadBtnPressed={reloadBtnPressed} backBtnPressed={backBtnPressed} setGameOptionsModalShown={setGameOptionsModalShown} onNavbarPress={() => onNavbarLogoPress()} gameOptions={gameOptions} screen={screen} multiplayerState={multiplayerState} shown={!multiplayerState?.gameData?.duel && !leagueModal} ws={ws} />
 
 {/* reload button for public game */}
 { multiplayerState?.gameData?.duel && multiplayerState?.gameData?.state === "guess" && (

@@ -5,8 +5,9 @@ import { FaArrowRotateRight, FaPencil } from "react-icons/fa6";
 import { useTranslation } from '@/components/useTranslations'
 import WsIcon from "../wsIcon";
 import { useState, useEffect } from "react";
+import GuestNameInput from "../guestNameInput";
 
-export default function Navbar({ maintenance, joinCodePress, inCrazyGames, inCoolMathGames, inGame, openAccountModal, shown, backBtnPressed, reloadBtnPressed, setGameOptionsModalShown, onNavbarPress, onFriendsPress, gameOptions, session, screen, multiplayerState, loading }) {
+export default function Navbar({ maintenance, joinCodePress, inCrazyGames, inCoolMathGames, inGame, openAccountModal, shown, backBtnPressed, reloadBtnPressed, setGameOptionsModalShown, onNavbarPress, onFriendsPress, gameOptions, session, screen, multiplayerState, loading, ws }) {
   const { t: text } = useTranslation("common");
 
   const reloadBtn = (((multiplayerState?.inGame) || (screen === 'singleplayer'))) && (!loading);
@@ -77,6 +78,15 @@ export default function Navbar({ maintenance, joinCodePress, inCrazyGames, inCoo
           )}
 
         {!inGame && showAccBtn && !inCoolMathGames && (<AccountBtn inCrazyGames={inCrazyGames} session={session} navbarMode={true} openAccountModal={openAccountModal} />)}
+        
+        {/* Guest name input for non-logged-in users */}
+        {!session?.token?.secret && multiplayerState?.connected && multiplayerState?.guestName && (
+          <GuestNameInput 
+            currentName={multiplayerState.guestName}
+            isGuest={true}
+            ws={ws}
+          />
+        )}
         </div>
     </div>
     </>
