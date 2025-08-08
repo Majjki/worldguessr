@@ -342,4 +342,71 @@ export default class Player {
   this.send(data);
 }
 
+  setGuestName(newName, filter) {
+    // Only allow guest players to change their name
+    if (this.accountId) {
+      this.send({
+        type: 'error',
+        message: 'Only guest players can change their name'
+      });
+      return false;
+    }
+
+    // Validate the name
+    if (!newName || typeof newName !== 'string') {
+      this.send({
+        type: 'error',
+        message: 'Invalid name'
+      });
+      return false;
+    }
+
+    // Trim and check length
+    newName = newName.trim();
+    if (newName.length < 1 || newName.length > 20) {
+      this.send({
+        type: 'error',
+        message: 'Name must be between 1 and 20 characters'
+      });
+      return false;
+    }
+
+    // Filter profanity
+    if (filter && filter.isProfane(newName)) {
+      this.send({
+        type: 'error',
+        message: 'Name contains inappropriate content'
+      });
+      return false;
+    }
+
+    // Update the username
+    const oldName = this.username;
+    this.username = newName;
+
+    // Update the game if player is in one
+    if (this.gameId && games.has(this.gameId)) {
+      const game = games.get(this.gameId);
+      if (game.players[this.id]) {
+        game.players[this.id].username = newName;
+        
+        // Notify all players in the game about the name change
+        game.sendAllPlayers({
+          type: 'playerNameChange',
+          playerId: this.id,
+          oldName: oldName,
+          newName: newName
+        });
+      }
+    }
+
+    // Send confirmation to the player
+    this.send({
+      type: 'nameChangeSuccess',
+      newName: newName
+    });
+
+    return true;
+  }
+
 }
